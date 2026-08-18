@@ -1,14 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Khebab — Build your own custom grilled khebab. Fresh ingredients, grilled to order, delivered hot in Accra." />
-    <title>🍢 Khebab — Build Your Own</title>
-    <script type="module" crossorigin src="/khebab-app/assets/index-BgYKj6_5.js"></script>
-    <link rel="stylesheet" crossorigin href="/khebab-app/assets/index-DWPB93km.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍢 Khebab — Build Your Own</title>
+  <style>
+    :root {
+      --bg: #0b111e;
+      --card-bg: #1a1f2e;
+      --accent: #f59e0b;
+      --text: #ffffff;
+      --muted: #8892a6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .app { min-height: 100vh; padding: 20px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #2a3045; }
+    .brand { font-size: 24px; font-weight: 700; color: var(--accent); }
+    .step-indicator { display: flex; gap: 10px; margin: 30px 0; }
+    .step { padding: 10px 20px; border-radius: 8px; background: var(--card-bg); border: 1px solid #2a3045; cursor: pointer; font-size: 14px; }
+    .step.active { border-color: var(--accent); background: rgba(245,158,11,0.1); }
+    .step.done { opacity: 0.5; }
+    .step-num { font-size: 12px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
+    .card { background: var(--card-bg); border: 2px solid #2a3045; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card.selected { border-color: var(--accent); background: rgba(245,158,11,0.08); }
+    .card-icon { font-size: 36px; margin-bottom: 8px; }
+    .card-name { font-weight: 600; margin-bottom: 4px; }
+    .card-price { color: var(--accent); font-size: 14px; }
+    .layout { display: flex; gap: 30px; max-width: 1200px; margin: 0 auto; }
+    .main { flex: 1; }
+    .side { width: 320px; background: var(--card-bg); border-radius: 16px; padding: 25px; position: sticky; top: 20px; border: 1px solid #2a3045; }
+    .side h3 { color: var(--accent); margin-bottom: 15px; font-size: 18px; }
+    .skewer { background: #0d1117; border-radius: 12px; padding: 20px; margin-bottom: 15px; min-height: 120px; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+    .skewer-item { display: flex; justify-content: space-between; padding: 4px 12px; }
+    .total { font-size: 28px; font-weight: 700; color: var(--accent); text-align: center; margin: 15px 0; }
+    .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid #2a3045; margin-top: 8px; }
+    .qty-controls { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 8px 0; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #2a3045; background: var(--card-bg); color: var(--text); cursor: pointer; font-size: 18px; }
+    .pro-tip { background: rgba(245,158,11,0.08); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 8px; margin: 20px 0; color: var(--muted); font-size: 14px; }
+    .pro-tip strong { color: var(--accent); }
+    .addons { margin: 30px 0; }
+    .addons h3 { margin-bottom: 12px; color: var(--muted); font-size: 16px; }
+    .addon-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .addon { padding: 8px 16px; border-radius: 20px; background: var(--card-bg); border: 1px solid #2a3045; cursor: pointer; font-size: 14px; }
+    .addon:hover { border-color: var(--accent); }
+    .addon .price { color: var(--accent); margin-left: 6px; }
+    .progress-bar { height: 4px; background: #2a3045; border-radius: 2px; margin: 15px 0; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+    .trust { display: flex; gap: 20px; margin-top: 30px; justify-content: center; }
+    .trust-item { text-align: center; font-size: 13px; color: var(--muted); }
+    .trust-icon { font-size: 24px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="nav">
+      <div class="brand">🍢 Khebab</div>
+      <div style="display:flex;gap:15px;align-items:center">
+        <span style="cursor:pointer;color:var(--muted)">Build</span>
+        <span style="cursor:pointer;color:var(--muted)">Menu</span>
+        <span style="cursor:pointer;color:var(--muted)">Orders</span>
+        <span style="cursor:pointer;color:var(--muted)">About</span>
+        <span style="cursor:pointer;font-size:20px">🛒</span>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="main">
+        <div class="step-indicator">
+          <div class="step active"><span class="step-num">Step 1</span><br>Choose Meat</div>
+          <div class="step"><span class="step-num">Step 2</span><br>Add Veggies</div>
+          <div class="step"><span class="step-num">Step 3</span><br>Sauces & Spice</div>
+          <div class="step"><span class="step-num">Step 4</span><br>Review & Order</div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+
+        <h2 style="margin:20px 0 10px;font-size:22px">Choose Your Meat</h2>
+        <p style="color:var(--muted);margin-bottom:20px;font-size:14px">Select one or more — mix for the best flavor</p>
+
+        <div class="grid" id="meat-grid"></div>
+
+        <div class="pro-tip">
+          <strong>💡 Pro tip:</strong> Mix meats for the best flavor combination
+        </div>
+
+        <div class="addons">
+          <h3>Popular Add-ons</h3>
+          <div class="addon-row" id="addons"></div>
+        </div>
+
+        <div class="trust">
+          <div class="trust-item"><div class="trust-icon">🌿</div>Fresh Ingredients</div>
+          <div class="trust-item"><div class="trust-icon">🔥</div>Grilled to Perfection</div>
+          <div class="trust-item"><div class="trust-icon">🛡️</div>Hygienic & Safe</div>
+        </div>
+      </div>
+
+      <div class="side">
+        <h3>🍢 Your Khebab</h3>
+        <div class="skewer" id="skewer-preview">
+          <p style="color:var(--muted);text-align:center">Start selecting ingredients to build your skewer...</p>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span id="qty" style="font-size:18px;font-weight:600">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <div class="total" id="total">GHC 0.00</div>
+        <button class="btn btn-primary" onclick="addToCart()">Add to Cart</button>
+        <button class="btn btn-ghost" onclick="clearAll()">Start Over</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MEATS = [
+      {id:'m1',name:'Beef',icon:'🥩',price:15},
+      {id:'m2',name:'Chicken',icon:'🍗',price:12},
+      {id:'m3',name:'Goat',icon:'🍖',price:18},
+      {id:'m4',name:'Lamb',icon:'🐑',price:20},
+      {id:'m5',name:'Pork',icon:'🥓',price:14},
+      {id:'m6',name:'Turkey',icon:'🦃',price:16},
+    ];
+    const ADDONS = [
+      {name:'Bell Pepper',icon:'🫑',price:2},
+      {name:'Onion',icon:'🧅',price:2},
+      {name:'Mushroom',icon:'🍄',price:3},
+      {name:'Pineapple',icon:'🍍',price:2},
+      {name:'Zucchini',icon:'🥒',price:2},
+      {name:'Cherry Tomato',icon:'🍅',price:2},
+    ];
+
+    let selections = [];
+    let qty = 1;
+
+    function renderMeats() {
+      const grid = document.getElementById('meat-grid');
+      grid.innerHTML = MEATS.map(m => `
+        <div class="card" onclick="toggleMeat('${m.id}')" id="meat-${m.id}">
+          <div class="card-icon">${m.icon}</div>
+          <div class="card-name">${m.name}</div>
+          <div class="card-price">GHC ${m.price.toFixed(2)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderAddons() {
+      document.getElementById('addons').innerHTML = ADDONS.map(a => `
+        <div class="addon" onclick="addAddon('${a.name}',${a.price})">${a.icon} ${a.name}<span class="price">+GHC ${a.price}</span></div>
+      `).join('');
+    }
+
+    function toggleMeat(id) {
+      const meat = MEATS.find(m => m.id === id);
+      const idx = selections.findIndex(s => s.id === id);
+      if (idx >= 0) {
+        selections.splice(idx, 1);
+      } else {
+        selections.push({id, name: meat.name, icon: meat.icon, price: meat.price, qty: 1});
+      }
+      updateMeatCards();
+      updateSkewer();
+      updateTotal();
+    }
+
+    function addAddon(name, price) {
+      selections.push({id: 'addon-'+name+Date.now(), name, icon: '🥗', price, qty: 1});
+      updateSkewer();
+      updateTotal();
+    }
+
+    function updateMeatCards() {
+      MEATS.forEach(m => {
+        const card = document.getElementById('meat-'+m.id);
+        if (selections.find(s => s.id === m.id)) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+    }
+
+    function updateSkewer() {
+      const skewer = document.getElementById('skewer-preview');
+      if (selections.length === 0) {
+        skewer.innerHTML = '<p style="color:var(--muted);text-align:center">Start selecting ingredients to build your skewer...</p>';
+        return;
+      }
+      skewer.innerHTML = selections.map(s => `
+        <div class="skewer-item">
+          <span>${s.icon} ${s.name} ${s.qty > 1 ? '×'+s.qty : ''}</span>
+          <span style="color:var(--accent)">GHC ${(s.price * s.qty).toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+
+    function updateTotal() {
+      const subtotal = selections.reduce((sum, s) => sum + s.price * s.qty, 0);
+      document.getElementById('total').textContent = 'GHC ' + (subtotal * qty).toFixed(2);
+    }
+
+    function changeQty(delta) {
+      qty = Math.max(1, qty + delta);
+      document.getElementById('qty').textContent = qty;
+      updateTotal();
+    }
+
+    function clearAll() {
+      selections = [];
+      qty = 1;
+      document.getElementById('qty').textContent = '1';
+      updateMeatCards();
+      updateSkewer();
+      updateTotal();
+    }
+
+    function addToCart() {
+      if (selections.length === 0) {
+        alert('Please select at least one ingredient!');
+        return;
+      }
+      alert('✅ Added to cart! (Demo mode — checkout coming soon)');
+    }
+
+    renderMeats();
+    renderAddons();
+  </script>
+</body>
 </html>
