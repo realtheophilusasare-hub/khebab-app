@@ -1,0 +1,82 @@
+.addons-section {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--panel-bg, #1a1f2e);
+  border-radius: 16px;
+  border: 1px solid var(--panel-border, #2a3045);
+}
+
+.addons-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.addons-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  margin: 0;
+}
+
+.addons-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted, #8892a6);
+}
+
+.addons-carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.addons-carousel::-webkit-scrollbar {
+  height: 4px;
+}
+
+.addons-carousel::-webkit-scrollbar-thumb {
+  background: var(--card-border, #2a3045);
+  border-radius: 100px;
+}
+
+.addon-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--card-bg, #0d1117);
+  border: 1.5px solid var(--card-border, #2a3045);
+  border-radius: 100px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.addon-chip:hover {
+  border-color: var(--accent, #f59e0b);
+}
+
+.addon-chip.selected {
+  border-color: var(--accent, #f59e0b);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.addon-icon {
+  font-size: 1.1rem;
+}
+
+.addon-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+}
+
+.addon-check {
+  color: var(--accent, #f59e0b);
+  font-size: 0.85rem;
+  font-weight: 700;
+}

@@ -1,0 +1,151 @@
+.skewer-panel {
+  background: var(--panel-bg, #1a1f2e);
+  border: 1px solid var(--panel-border, #2a3045);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.skewer-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skewer-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  margin: 0;
+}
+
+.skewer-count {
+  font-size: 0.75rem;
+  color: var(--text-muted, #8892a6);
+  background: var(--badge-bg, rgba(255,255,255,0.08));
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+/* Visual Skewer */
+.skewer-visual {
+  background: var(--skewer-bg, #0d1117);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skewer-stick {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  padding: 8px 0;
+}
+
+.skewer-stick::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #c4a265, #d4b676);
+  border-radius: 2px;
+  z-index: 0;
+}
+
+.skewer-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.2s ease;
+  cursor: default;
+}
+
+.skewer-icon {
+  font-size: 1.1rem;
+}
+
+.skewer-empty {
+  color: var(--text-muted, #8892a6);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Ingredient List */
+.skewer-ingredient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.skewer-empty-list {
+  color: var(--text-muted, #8892a6);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 12px;
+}
+
+.skewer-ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--row-bg, rgba(255,255,255,0.04));
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.ingredient-icon {
+  font-size: 1rem;
+}
+
+.ingredient-name {
+  flex: 1;
+  color: var(--text-primary, #fff);
+}
+
+.ingredient-qty {
+  color: var(--accent, #f59e0b);
+  font-weight: 600;
+}
+
+/* Extras (seasoning & sauce) */
+.skewer-extras {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--panel-border, #2a3045);
+}
+
+.extra-row {
+  display: flex;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.extra-label {
+  color: var(--text-muted, #8892a6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.extra-value {
+  color: var(--text-primary, #fff);
+}
